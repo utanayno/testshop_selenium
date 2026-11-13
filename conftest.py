@@ -7,6 +7,9 @@ from pages.cart_page import CartPage
 from pages.catalog_category_page import CatalogCatPage
 from pages.item_page import ItemPage
 import random
+import allure
+from allure_commons.types import AttachmentType
+
 
 @pytest.fixture
 def driver():
@@ -16,6 +19,7 @@ def driver():
     #отключаем sandbox браузера
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('window-size=1920x1080')
     #указываем путь к браузеру Chromium
     options.binary_location = '/usr/bin/chromium'
 
@@ -28,7 +32,8 @@ def driver():
     chrome_driver.maximize_window()
     yield chrome_driver
     #чтобы разные имена у скриншотов были
-    chrome_driver.save_screenshot(f'{str(random.randint(100,10000))}.png')
+    #chrome_driver.save_screenshot(f'{str(random.randint(100,10000))}.png')
+    allure.attach(chrome_driver.get_screenshot_as_png(),name='Screenshot', attachment_type=AttachmentType.PNG)
     chrome_driver.quit()
 
 @pytest.fixture
